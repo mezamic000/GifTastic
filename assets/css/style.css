@@ -36,3 +36,9 @@ p {
 	background-color: blueviolet;
 	color: white;
 }
+
+button {
+	color: blueviolet;
+	font-weight: 500;
+	margin: 5px;
+}
