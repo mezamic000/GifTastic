@@ -1,39 +1,55 @@
-$(document).ready(function() {
-	var topics = ["Happy", "Sad", "Angry", "Bored", "Hungry", "Tired"];
+$(document).ready(function () {
+	//javascript code for buttons:
 
-	function createButtons() {
-		for (var i = 0; i < topics.length; i++) {
-			var button = document.createElement("button");
-			var text = document.createTextNode(topics[i]);
-			button.appendChild(text);
-			var myDiv = document.getElementById("buttons");
-			myDiv.appendChild(button);
-		}
-	}
-	createButtons();
+	// var topics = ["Happy", "Sad", "Angry", "Bored", "Hungry", "Tired"];
 
-	$("#find-emotion").on("click", function(event) {
-		// event.preventDefualt();
-		console.log("clicked");
+	// var storedData = $("#buttons").data("emotions").split(",");
+
+	// function createButtons() {
+	// 	for (var i = 0; i < topics.length; i++) {
+	// 		var emotions = $(this).attr("data-emotions", storedData[i]);
+	// 		button = document.createElement("button");
+	// 		var text = document.createTextNode(topics[i]);
+	// 		button.appendChild(text);
+	// 		var myDiv = document.getElementById("buttons");
+	// 		// var b = $("<button >");
+	// 		// b.attr("data-emotions", storedData[i]);
+	// 		myDiv.appendChild(button);
+	// 	}
+	// }
+	// createButtons();
+
+	$("button").on("click", function () {
+		var emotion = $(this).attr("data-emotion");
 
 		var queryURL =
-			"https://api.giphy.com/v1/gifs/search?api_key=bncTca2KYj131Dgdey0Tr3tI051nbv14&q=emotions&limit=10";
-
-		console.log(queryURL);
+			"https://api.giphy.com/v1/gifs/search?q=" +
+			emotion +
+			"&api_key=bncTca2KYj131Dgdey0Tr3tI051nbv14&limit=10";
 
 		$.ajax({
 			url: queryURL,
-			method: "GET"
-		}).then(function(response) {
+			method: "GET",
+		}).then(function (response) {
+			console.log(queryURL);
+
 			console.log(response);
 
-			for (var i = 0; i < response.data.length; i++) {
-				var emotionImage = $("<img>");
-				var imageUrl = response.data[i].images.fixed_height.url;
-				emotionImage.attr("src", imageUrl);
-				emotionImage.attr("alt", "emotion image");
+			var results = response.data;
 
-				$("#images").prepend(emotionImage);
+			for (var i = 0; i < results.length; i++) {
+				var emotionDiv = $("<div>");
+
+				var p = $("<p>").text("Rating: " + results[i].rating);
+
+				var emotionImage = $("<img>");
+
+				emotionImage.attr("src", results[i].images.fixed_height.url);
+
+				emotionDiv.append(p);
+				emotionDiv.append(emotionImage);
+
+				$("#gifs-here").prepend(emotionDiv);
 			}
 		});
 	});
